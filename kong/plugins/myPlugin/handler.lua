@@ -51,12 +51,13 @@ function plugin:access()
   
 end --]]
 
---[[ runs in the 'header_filter_by_lua_block'
+-- runs in the 'header_filter_by_lua_block'
 function plugin:header_filter()
   plugin.super.access(self)
 
-  -- your custom code here
-  
+  -- your custom code here, for example;
+  ngx.header["Hello-World"] = "Hello World!!!"
+
 end --]]
 
 --[[ runs in the 'body_filter_by_lua_block'
