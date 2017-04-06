@@ -36,7 +36,7 @@ function plugin:init_worker()
 end --]]
 
 --[[ runs in the ssl_certificate_by_lua_block handler
-function plugin:certificate()
+function plugin:certificate(plugin_conf)
   plugin.super.access(self)
 
   -- your custom code here
@@ -44,7 +44,7 @@ function plugin:certificate()
 end --]]
 
 ---[[ runs in the 'access_by_lua_block'
-function plugin:access()
+function plugin:access(plugin_conf)
   plugin.super.access(self)
 
   -- your custom code here
@@ -53,7 +53,7 @@ function plugin:access()
 end --]]
 
 ---[[ runs in the 'header_filter_by_lua_block'
-function plugin:header_filter()
+function plugin:header_filter(plugin_conf)
   plugin.super.access(self)
 
   -- your custom code here, for example;
@@ -62,7 +62,7 @@ function plugin:header_filter()
 end --]]
 
 --[[ runs in the 'body_filter_by_lua_block'
-function plugin:body_filter()
+function plugin:body_filter(plugin_conf)
   plugin.super.access(self)
 
   -- your custom code here
@@ -70,7 +70,7 @@ function plugin:body_filter()
 end --]]
 
 --[[ runs in the 'log_by_lua_block'
-function plugin:log()
+function plugin:log(plugin_conf)
   plugin.super.access(self)
 
   -- your custom code here
