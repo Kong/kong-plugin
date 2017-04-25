@@ -1,5 +1,3 @@
-local PLUGIN_NAME = "myPlugin"
-
 local helpers = require "spec.helpers"
 
 describe("Demo-Plugin: myPlugin (access)", function()
@@ -14,12 +12,12 @@ describe("Demo-Plugin: myPlugin (access)", function()
 
     assert(helpers.dao.plugins:insert {
       api_id = api1.id,
-      name = PLUGIN_NAME,
+      name = "myPlugin",
     })
 
     -- start kong, while setting the config item `custom_plugins` to make sure our
     -- plugin gets loaded
-    assert(helpers.start_kong {custom_plugins = PLUGIN_NAME})
+    assert(helpers.start_kong {custom_plugins = "myPlugin"})
   end)
 
   teardown(function()
