@@ -43,6 +43,17 @@ function plugin:certificate(plugin_conf)
   
 end --]]
 
+--[[ runs in the 'rewrite_by_lua_block' (from version 0.10.2+)
+-- IMPORTANT: during the `rewrite` phase neither the `api` nor the `consumer` will have
+-- been identified, hence this handler will only be executed if the plugin is 
+-- configured as a global plugin!
+function plugin:rewrite(plugin_conf)
+  plugin.super.rewrite(self)
+
+  -- your custom code here
+  
+end --]]
+
 ---[[ runs in the 'access_by_lua_block'
 function plugin:access(plugin_conf)
   plugin.super.access(self)
