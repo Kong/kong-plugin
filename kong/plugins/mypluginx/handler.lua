@@ -4,12 +4,15 @@
 --assert(ngx.get_phase() == "timer", "The world is coming to an end!")
 
 
+-- Grab pluginname from module name
+local plugin_name = ({...})[1]:match("^kong%.plugins%.([^%.]+)")
+
 -- load the base plugin object and create a subclass
 local plugin = require("kong.plugins.base_plugin"):extend()
 
 -- constructor
 function plugin:new()
-  plugin.super.new(self, "myPlugin")  --TODO: change "myPlugin" to the name of the plugin here
+  plugin.super.new(self, plugin_name)
   
   -- do initialization here, runs in the 'init_by_lua_block', before worker processes are forked
 
