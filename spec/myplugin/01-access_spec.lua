@@ -4,24 +4,28 @@ describe("Demo-Plugin: myplugin (access)", function()
   local client
 
   setup(function()
-    local api1 = assert(helpers.dao.apis:insert { 
-        name = "api-1", 
-        hosts = { "test1.com" }, 
-        upstream_url = "http://mockbin.com",
-    })
+    local bp = helpers.get_db_utils(strategy)
 
-    assert(helpers.dao.plugins:insert {
-      api_id = api1.id,
+    local route1 = bp.routes:insert({
+      hosts = { "test1.com" },
+    })
+    bp.plugins:insert {
       name = "myplugin",
-    })
+      route_id = route1.id,
+      config = {},
+    }
 
-    -- start kong, while setting the config item `custom_plugins` to make sure our
-    -- plugin gets loaded
-    assert(helpers.start_kong {custom_plugins = "myplugin"})
+    -- start kong
+    assert(helpers.start_kong({
+      -- use the custom test template to create a local mock server
+      nginx_conf = "spec/fixtures/custom_nginx.template",
+      -- set the config item `custom_plugins` to make sure our plugin gets loaded
+      custom_plugins = "myplugin",
+    }))
   end)
 
   teardown(function()
-    helpers.stop_kong()
+    helpers.stop_kong(nil, true)
   end)
 
   before_each(function()
