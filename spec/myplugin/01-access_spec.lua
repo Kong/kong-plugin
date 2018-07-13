@@ -1,6 +1,7 @@
 local helpers = require "spec.helpers"
 
-describe("Demo-Plugin: myplugin (access)", function()
+for _, strategy in helpers.each_strategy() do
+ describe("Demo-Plugin: myplugin (access)", function()
   local client
 
   setup(function()
@@ -72,4 +73,5 @@ describe("Demo-Plugin: myplugin (access)", function()
     end)
   end)
 
-end)
+ end)
+end
