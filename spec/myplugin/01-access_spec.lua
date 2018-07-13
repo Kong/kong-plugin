@@ -18,6 +18,8 @@ for _, strategy in helpers.each_strategy() do
 
     -- start kong
     assert(helpers.start_kong({
+      -- use database strategy
+      database   = strategy,  
       -- use the custom test template to create a local mock server
       nginx_conf = "spec/fixtures/custom_nginx.template",
       -- set the config item `custom_plugins` to make sure our plugin gets loaded
