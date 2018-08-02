@@ -1,5 +1,7 @@
 local helpers = require "spec.helpers"
 
+
+
 for _, strategy in helpers.each_strategy() do
   describe("Demo-Plugin: myplugin (access) [#" .. strategy .. "]", function()
     local client
@@ -22,8 +24,9 @@ for _, strategy in helpers.each_strategy() do
         database   = strategy,
         -- use the custom test template to create a local mock server
         nginx_conf = "spec/fixtures/custom_nginx.template",
-        -- set the config item `custom_plugins` to make sure our plugin gets loaded
-        custom_plugins = "myplugin",
+        -- set the config item to make sure our plugin gets loaded
+        plugins = "bundled,myplugin",         -- since Kong CE 0.14
+        custom_plugins = "myplugin",          -- pre Kong CE 0.14
       }))
     end)
 
@@ -38,6 +41,8 @@ for _, strategy in helpers.each_strategy() do
     after_each(function()
       if client then client:close() end
     end)
+
+
 
     describe("request", function()
       it("gets a 'hello-world' header", function()
@@ -56,6 +61,8 @@ for _, strategy in helpers.each_strategy() do
         assert.equal("this is on a request", header_value)
       end)
     end)
+
+
 
     describe("response", function()
       it("gets a 'bye-world' header", function()
