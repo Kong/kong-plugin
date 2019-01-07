@@ -7,14 +7,14 @@ for _, strategy in helpers.each_strategy() do
     local client
 
     lazy_setup(function()
-      local bp = helpers.get_db_utils(strategy)
+      local bp = helpers.get_db_utils(strategy, nil, { "myplugin" })
 
       local route1 = bp.routes:insert({
         hosts = { "test1.com" },
       })
       bp.plugins:insert {
         name = "myplugin",
-        route_id = route1.id,
+        route = { id = route1.id },
         config = {},
       }
 
