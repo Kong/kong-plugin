@@ -1,22 +1,47 @@
 local helpers = require "spec.helpers"
+local version = require("version").version
 
+
+local PLUGIN_NAME = "myplugin"
+local KONG_VERSION = version(select(3, assert(helpers.kong_exec("version"))))
 
 
 for _, strategy in helpers.each_strategy() do
-  describe("Demo-Plugin: myplugin (access) [#" .. strategy .. "]", function()
+  describe(PLUGIN_NAME .. ": (access) [#" .. strategy .. "]", function()
     local client
 
     lazy_setup(function()
-      local bp = helpers.get_db_utils(strategy, nil, { "myplugin" })
+      local bp, route1
 
-      local route1 = bp.routes:insert({
-        hosts = { "test1.com" },
-      })
-      bp.plugins:insert {
-        name = "myplugin",
-        route = { id = route1.id },
-        config = {},
-      }
+      if KONG_VERSION >= version("0.15.0") then
+        --
+        -- Kong version 0.15.0/1.0.0, new test helpers
+        --
+        local bp = helpers.get_db_utils(strategy, nil, { PLUGIN_NAME })
+
+        local route1 = bp.routes:insert({
+          hosts = { "test1.com" },
+        })
+        bp.plugins:insert {
+          name = PLUGIN_NAME,
+          route = { id = route1.id },
+          config = {},
+        }
+      else
+        --
+        -- Pre Kong version 0.15.0/1.0.0, older test helpers
+        --
+        local bp = helpers.get_db_utils(strategy)
+
+        local route1 = bp.routes:insert({
+          hosts = { "test1.com" },
+        })
+        bp.plugins:insert {
+          name = PLUGIN_NAME,
+          route_id = route1.id,
+          config = {},
+        }
+      end
 
       -- start kong
       assert(helpers.start_kong({
@@ -25,8 +50,8 @@ for _, strategy in helpers.each_strategy() do
         -- use the custom test template to create a local mock server
         nginx_conf = "spec/fixtures/custom_nginx.template",
         -- set the config item to make sure our plugin gets loaded
-        plugins = "bundled,myplugin",         -- since Kong CE 0.14
-        custom_plugins = "myplugin",          -- pre Kong CE 0.14
+        plugins = "bundled," .. PLUGIN_NAME,  -- since Kong CE 0.14
+        custom_plugins = PLUGIN_NAME,         -- pre Kong CE 0.14
       }))
     end)
 
