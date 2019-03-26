@@ -3,7 +3,25 @@ local version = require("version").version
 
 
 local PLUGIN_NAME = "myplugin"
-local KONG_VERSION = version(select(3, assert(helpers.kong_exec("version"))))
+
+local KONG_VERSION, KONG_ENTERPRISE
+do
+  local _, _, version_string = assert(helpers.kong_exec("version"))
+  KONG_ENTERPRISE = string.lower(version_string):find("enterprise")
+  -- grab the version part (NOTE: enterprise versions can have a '-')
+  version_string = version_string:match("([%d%.%-]+)")
+  version_string = version_string:gsub("%-", ".")
+
+  -- convert Enterprise to accompanying OSS version
+  KONG_VERSION = version(version_string)
+  if KONG_ENTERPRISE then
+    -- convert Enterprise to accompanying OSS version
+    if KONG_VERSION <= version("0.34.1") then KONG_VERSION = version("0.13.1")
+    else
+      error("Unknown Kong Enterprise version: " .. tostring(KONG_VERSION))
+    end
+  end
+end
 
 
 for _, strategy in helpers.each_strategy() do
