@@ -1,8 +1,9 @@
-upstream-oauth2 plugin
-======================
+Kong plugin template
+====================
 
-Plugin that runs after any other Kong authentication plugin and calls an oauth2
-token endpoint to obtain and insert the token in the request to an upstream service.
+This repository contains a very simple Kong plugin template to get you
+up and running quickly for developing your own plugins.
 
-
-
+This template was designed to work with the `kong-vagrant`
+[development environment](https://github.com/Mashape/kong-vagrant). Please
+check out that repo's `README` for usage instructions.
