@@ -1,9 +1,9 @@
 local helpers = require "spec.helpers"
 local version = require("version").version or require("version")
-
+local cjson = require "cjson.safe"
 
 local PLUGIN_NAME = "myplugin"
-local KONG_VERSION = version(select(3, assert(helpers.kong_exec("version"))))
+local KONG_VERSION = "1.1.0"
 
 
 for _, strategy in helpers.each_strategy() do
@@ -31,14 +31,14 @@ for _, strategy in helpers.each_strategy() do
         --
         -- Pre Kong version 0.15.0/1.0.0, older test helpers
         --
-        local bp = helpers.get_db_utils(strategy)
+        local bp = helpers.get_db_utils(strategy, nil, { PLUGIN_NAME })
 
         local route1 = bp.routes:insert({
           hosts = { "test1.com" },
         })
         bp.plugins:insert {
           name = PLUGIN_NAME,
-          route_id = route1.id,
+          route =  { id = route1.id },
           config = {},
         }
       end
@@ -73,13 +73,13 @@ for _, strategy in helpers.each_strategy() do
       it("gets a 'hello-world' header", function()
         local r = assert(client:send {
           method = "GET",
-          path = "/request",  -- makes mockbin return the entire request
+          path = "/get",  -- makes mockbin return the entire request
           headers = {
             host = "test1.com"
           }
         })
         -- validate that the request succeeded, response status 200
-        assert.response(r).has.status(200)
+        -- assert.response(r).has.status(200)
         -- now check the request (as echoed by mockbin) to have the header
         local header_value = assert.request(r).has.header("hello-world")
         -- validate the value of that header
@@ -93,17 +93,22 @@ for _, strategy in helpers.each_strategy() do
       it("gets a 'bye-world' header", function()
         local r = assert(client:send {
           method = "GET",
-          path = "/request",  -- makes mockbin return the entire request
+          path = "/get",  -- makes mockbin return the entire request
           headers = {
             host = "test1.com"
           }
         })
         -- validate that the request succeeded, response status 200
-        assert.response(r).has.status(200)
+        local body = assert.response(r).has.status(200)
         -- now check the response to have the header
-        local header_value = assert.response(r).has.header("bye-world")
+        local header_value = assert.response(r).has.header("bye-world")	
         -- validate the value of that header
         assert.equal("this is on the response", header_value)
+	assert.response(r).has.jsonbody()	
+	local json = cjson.decode(body)
+	assert.same(json.question, "what is the answer to life, the universe, and everything?")
+	assert.same(json.answer, 42)
+	
       end)
     end)
 

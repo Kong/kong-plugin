@@ -2,7 +2,8 @@
 -- then it will throw an error which indicates the plugin is being loaded at least.
 
 --assert(ngx.get_phase() == "timer", "The world is coming to an end!")
-
+local ngx = ngx
+local cjson = require "cjson.safe"
 
 -- Grab pluginname from module name
 local plugin_name = ({...})[1]:match("^kong%.plugins%.([^%.]+)")
@@ -75,13 +76,27 @@ function plugin:header_filter(plugin_conf)
 
 end --]]
 
---[[ runs in the 'body_filter_by_lua_block'
 function plugin:body_filter(plugin_conf)
   plugin.super.body_filter(self)
+	local ctx = ngx.ctx
+	local chunk, eof = ngx.arg[1], ngx.arg[2]
+		ctx.rt_body_chunks = ctx.rt_body_chunks or {}
+    ctx.rt_body_chunk_number = ctx.rt_body_chunk_number or 1
+    if eof then
+      local chunks = table.concat(ctx.rt_body_chunks)
+      local body = cjson.encode({
+					question = "what is the answer to life, the universe, and everything?",
+					answer = 42	
+			}) 
+      ngx.arg[1] = body or chunks
 
-  -- your custom code here
-
-end --]]
+    else
+      ctx.rt_body_chunks[ctx.rt_body_chunk_number] = chunk
+      ctx.rt_body_chunk_number = ctx.rt_body_chunk_number + 1
+      ngx.arg[1] = nil
+    end
+	
+end
 
 --[[ runs in the 'log_by_lua_block'
 function plugin:log(plugin_conf)
