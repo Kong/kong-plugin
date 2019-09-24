@@ -3,8 +3,15 @@ local version = require("version").version or require("version")
 
 
 local PLUGIN_NAME = "myplugin"
-local KONG_VERSION = version(select(3, assert(helpers.kong_exec("version"))))
-
+local KONG_VERSION
+do
+  local _, _, std_out = assert(helpers.kong_exec("version"))
+  if std_out:find("[Ee]nterprise") then
+    std_out = std_out:gsub("%-", ".")
+  end
+  std_out = std_out:match("(%d[%d%.]+%d)")
+  KONG_VERSION = version(std_out)
+end
 
 for _, strategy in helpers.each_strategy() do
   describe(PLUGIN_NAME .. ": (access) [#" .. strategy .. "]", function()
@@ -13,9 +20,11 @@ for _, strategy in helpers.each_strategy() do
     lazy_setup(function()
       local bp, route1
 
-      if KONG_VERSION >= version("0.15.0") then
+      if KONG_VERSION >= version("0.35.0") or
+         KONG_VERSION == version("0.15.0") then
         --
-        -- Kong version 0.15.0/1.0.0, new test helpers
+        -- Kong version 0.15.0/1.0.0+, and
+        -- Kong Enterprise 0.35+ new test helpers
         --
         local bp = helpers.get_db_utils(strategy, nil, { PLUGIN_NAME })
 
@@ -29,7 +38,8 @@ for _, strategy in helpers.each_strategy() do
         }
       else
         --
-        -- Pre Kong version 0.15.0/1.0.0, older test helpers
+        -- Pre Kong version 0.15.0/1.0.0, and
+        -- Kong Enterprise 0.35 older test helpers
         --
         local bp = helpers.get_db_utils(strategy)
 
