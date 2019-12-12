@@ -7,7 +7,7 @@ version = "0.1.0-1"               -- TODO: renumber, must match the info in the 
 
 -- TODO: This is the name to set in the Kong configuration `plugins` setting.
 -- Here we extract it from the package name.
-local pluginName = package:match("^kong%-plugin%-(.+)$")  -- "myPlugin"
+local pluginName = package:match("^kong%-plugin%-(.+)$")  -- "myplugin"
 
 supported_platforms = {"linux", "macosx"}
 source = {
