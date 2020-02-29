@@ -3,24 +3,6 @@
 
 --assert(ngx.get_phase() == "timer", "The world is coming to an end!")
 
-
--- Grab pluginname from module name
-local plugin_name = ({...})[1]:match("^kong%.plugins%.([^%.]+)")
-
-
-local plugin = {
-  PRIORITY = 1000, -- set the plugin priority, which determines plugin execution order
-  VERSION = "0.1",
-}
-
--- constructor
-function plugin:new()
-
-  -- do initialization here, runs in the 'init_by_lua_block', before worker processes are forked
-
-end
-
-
 ---------------------------------------------------------------------------------------------
 -- In the code below, just remove the opening brackets; `[[` to enable a specific handler
 --
@@ -29,39 +11,60 @@ end
 ---------------------------------------------------------------------------------------------
 
 
---[[ handles more initialization, but AFTER the worker process has been forked/created.
+
+local plugin = {
+  PRIORITY = 1000, -- set the plugin priority, which determines plugin execution order
+  VERSION = "0.1",
+}
+
+
+
+-- do initialization here, any module level code runs in the 'init_by_lua_block',
+-- before worker processes are forked. So anything you add here will run once,
+-- but be available in all workers.
+
+
+
+---[[ handles more initialization, but AFTER the worker process has been forked/created.
 -- It runs in the 'init_worker_by_lua_block'
 function plugin:init_worker()
 
   -- your custom code here
+  kong.log.debug("saying hi from the 'init_worker' handler")
 
 end --]]
+
 
 
 --[[ runs in the ssl_certificate_by_lua_block handler
 function plugin:certificate(plugin_conf)
 
   -- your custom code here
+  kong.log.debug("saying hi from the 'certificate' handler")
 
 end --]]
 
 
+
 --[[ runs in the 'rewrite_by_lua_block'
--- IMPORTANT: during the `rewrite` phase neither the `api` nor the `consumer` will have
--- been identified, hence this handler will only be executed if the plugin is
+-- IMPORTANT: during the `rewrite` phase neither `route`, `service`, nor `consumer`
+-- will have been identified, hence this handler will only be executed if the plugin is
 -- configured as a global plugin!
 function plugin:rewrite(plugin_conf)
 
   -- your custom code here
+  kong.log.debug("saying hi from the 'rewrite' handler")
 
 end --]]
+
 
 
 ---[[ runs in the 'access_by_lua_block'
 function plugin:access(plugin_conf)
 
   -- your custom code here
-  ngx.req.set_header("Hello-World", "this is on a request")
+  kong.log.inspect(plugin_conf)   -- check the logs for a pretty-printed config!
+  ngx.req.set_header(plugin_conf.request_header, "this is on a request")
 
 end --]]
 
@@ -70,7 +73,7 @@ end --]]
 function plugin:header_filter(plugin_conf)
 
   -- your custom code here, for example;
-  ngx.header["Bye-World"] = "this is on the response"
+  ngx.header[plugin_conf.response_header] = "this is on the response"
 
 end --]]
 
@@ -79,6 +82,7 @@ end --]]
 function plugin:body_filter(plugin_conf)
 
   -- your custom code here
+  kong.log.debug("saying hi from the 'body_filter' handler")
 
 end --]]
 
@@ -87,6 +91,7 @@ end --]]
 function plugin:log(plugin_conf)
 
   -- your custom code here
+  kong.log.debug("saying hi from the 'log' handler")
 
 end --]]
 
