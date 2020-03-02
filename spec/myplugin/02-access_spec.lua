@@ -1,5 +1,4 @@
 local helpers = require "spec.helpers"
-local version = require("version").version or require("version")
 
 
 local PLUGIN_NAME = "myplugin"

@@ -18,8 +18,8 @@ local schema = {
               required = true,
               default = "Hello-World" } },
           { response_header = typedefs.header_name {
-                required = true,
-                default = "Bye-World" } },
+              required = true,
+              default = "Bye-World" } },
           { ttl = { -- self defined field
               type = "integer",
               default = 600,
@@ -31,7 +31,7 @@ local schema = {
           -- the following is silly because it is always true, since they are both required
           { at_least_one_of = { "request_header", "response_header" }, },
           -- We specify that both header-names cannot be the same
-          { distinct = { "response_body_element", "response_body_id_element"} },
+          { distinct = { "request_header", "response_header"} },
         },
       },
     },
