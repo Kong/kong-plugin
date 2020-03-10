@@ -1,0 +1,16 @@
+dist: bionic
+
+env:
+  matrix:
+  # to add Kong Enterprise releases, check the Pongo docs
+  - KONG_VERSION=2.0.x
+  - KONG_VERSION=1.5.x
+
+install:
+- git clone --single-branch https://github.com/Kong/kong-pongo ../kong-pongo
+- "../kong-pongo/pongo.sh up"
+- "../kong-pongo/pongo.sh build"
+
+script:
+- "../kong-pongo/pongo.sh lint"
+- "../kong-pongo/pongo.sh run"
