@@ -51,9 +51,7 @@ for _, strategy in helpers.each_strategy() do
 
     describe("request", function()
       it("gets a 'hello-world' header", function()
-        local r = assert(client:send {
-          method = "GET",
-          path = "/request",  -- makes mockbin return the entire request
+        local r = client:get("/request", {
           headers = {
             host = "test1.com"
           }
@@ -71,9 +69,7 @@ for _, strategy in helpers.each_strategy() do
 
     describe("response", function()
       it("gets a 'bye-world' header", function()
-        local r = assert(client:send {
-          method = "GET",
-          path = "/request",  -- makes mockbin return the entire request
+        local r = client:get("/request", {
           headers = {
             host = "test1.com"
           }
