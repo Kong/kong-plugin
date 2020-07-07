@@ -38,10 +38,4 @@ local schema = {
   },
 }
 
--- run_on_first typedef/field was removed in Kong 2.x
--- try to insert it, but simply ignore if it fails
-pcall(function()
-        table.insert(schema.fields, { run_on = typedefs.run_on_first })
-      end)
-
 return schema

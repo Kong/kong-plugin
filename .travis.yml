@@ -7,6 +7,22 @@ jobs:
     env: KONG_VERSION=2.0.x
   - name: Kong CE 1.5.x
     env: KONG_VERSION=1.5.x
+  - name: Enterprise 1.5.0.x
+    env: KONG_VERSION=1.5.0.x
+  - name: Nightly EE-master
+    env: KONG_VERSION=nightly-ee POSTGRES=latest CASSANDRA=latest
+  #- name: Nightly CE-master
+  #  env: KONG_VERSION=nightly POSTGRES=latest CASSANDRA=latest
+
+env:
+  global:
+  # for Enterprise images
+  - BINTRAY_USERNAME=kong-automation@kong
+  - BINTRAY_REPO=kong
+  - secure: oeUW+9T38iyUZUr8EMaC11uhCKhkiAuAEpBQX2TV4xqk5L91evqskfXe0jLhJGoEZtQY4xZNc5DIQ0iYi39CVRXAaCY0B7C5r36TYWOhHoNW5rhYfbjVPHp3pk8ZAmpErPKLGd3m0i+1ppGr9u0E5aCsMQDIx+w36MG+s1p8ExFg8CTSTBQptr6rWTFd8PiClLyxzFr85y+/pG/yIMHk1Tc5ySaOhTqxMEdYD6wAmHt1yFvn2wC5IPjiZ9UhRmAwPJa0f3twCPIgdcmIHOC6PBBQJOs83yWRnc9ItYffXsn4e6D7fulrP8omjGixo/JFrHWd6hPJ7NiZrJBYZpcnmOsnOsT1A79VA4u0WOVTZo3Oy0QpT6lLXRqNlnp6gi1BaaASAzUkhc5y+yTN5NHPlrM2kMO6kB12Wd1VoMlQsq9mY1Wgsujhn5G0awTVpUQyH2dre4N81YuYHY9JZ5tO9X/zZr90j0buFMhkADIM0oBs2SSJyq6m//XOGsVoxi4WEA+L0VW5cO8fSAe7DAK8wKMqWxQHEeh5Whu80tSyS06UNepv/UdCrpLML93cKbGSATYKGEGm50CS0ae4XllHLlGmFctiefcAj9j9v4TWRAFT8w70bGIoy0UKDqXaiWIt3mjKAq7vPysaNlYT2/9HDX2NjuDALT9m0W4ZJ0YzMSg=
+  # for Nightly Enterprise images
+  - NIGHTLY_EE_USER=kong-automation@kong
+  - secure: XNRVPR2VK7HptN3nGY/QZpuaYx4M/pvvJDxJPyg6+0iN5GqPPMME45jNGIiN3otmb6dmmlpXt9CEj6PRi+sKuQyNEvbMvHprbNKvjM5NNb0FI2KJZ9sEwLLjEgFt2seAJBMXnPvIiQ9+aSPqQBreiXXm6adI+TdJNUjuZQWQjEzT+Qs/DDVcyyRK9YSNwocwMXRS/wlz6peecOFkyMRSB+hbU4Lh159R0lVaEGg7Khq6GYW9nVqdgaWFi96B/FIqUjJbGXcY+SC3u7NSuS2RNCMeHjvnfh7LSHpdeYe/afsadK1MVnH3O60L+YDV0/VAq1fDJjEziJyPopCvUOorjrtM5peKT+o9ilcoNYAWutYcba1HKLXc4zIGo+uj40zJ1tGBWSxyF2X3cmBwIH7PXNUA6dQFGWDiDFFaluF3rPwfnJfS3p//cDs5/EkTWdbpBHPgc6DP4k12y05ZK4ANuq6Jkt642vPKRQkvCVUc6/A2i8EuyEy/DzFU1XIXY/TGh0QaGoeVq/Dco3tURWKveq0orbB8BrjMVdamyx9k/oD4p4yq/zRTqaGXvVmjtXk4rLDzpMNwcvQ4Z14jLwzN9KU5fFBswP5YcyDGzEdqdig9cL9S0VppYrYAVd9znMUYEQ122x3+DNWw8SBLdTPdauZ76TwBSZcEutdh+hlWXqo=
 
 install:
 - git clone --single-branch https://github.com/Kong/kong-pongo ../kong-pongo
@@ -16,3 +32,11 @@ install:
 script:
 - "../kong-pongo/pongo.sh lint"
 - "../kong-pongo/pongo.sh run"
+
+notifications:
+  slack:
+    if: branch = master AND type != pull_request
+    on_success: change
+    on_failure: always
+    rooms:
+      secure: HdpUy77gMJEapyYOnKBqYeWFALG771KnLzUzbM5Et8br7RNrUTvA4fZ+paoLnIWU+0Sb+8A8/tRxBvPpxnVJFYZReQT4oBhX+wVTYbVr4i+UKfIDrU4DJ2nj3lHTa5t/dX7WZttBwFB8fuVugceWVF95DZCC9ll38d646+27wYydamu2hgCBs+PI4+J6msmFMC0T2vMr3A+B9reyiWQ+KG+E5U7mcmgMZ/xh10pBinPA7nXe0N4z50hR/ooHukFzMHDCyfVIKox9z9WQzS3SUI+Wxj6dts+dDVmVfTlM4XUM9e2MMDkBZgvQIedrjaR5pgdTl2xTWrMuMeeKbuimGa7FGD5rirgBg5gkP9LG1aSzJLP0lp4ldogTX+9VVaDE5N+ACKcR/10U3CskJYuOXx4cp0ub+TDIfe34NxgBe9PmTmJbTtRBgZ0sNVfZqfCmDYeCMTTyA+zug+XkPI+lQ56QqgFg4Hxohr+EsCQcQzA2YI9QUw0fIZPKyWQ91neE/ytF4xvNM8YI0yuLLgRYbbcvu6Tn4q0rwJkIdjh9eExD9ddsgTmENVN0KEYMj/Rk3WUJi6k7MDcSmxaBLC9REObgddyGM4hgXtbLGBAnJaDBHTaDBetTmrae2PAiZs478P4l5X1TzlZZMYVLlpVukpDJPzH6NBXZgiYjkyFipVc=
