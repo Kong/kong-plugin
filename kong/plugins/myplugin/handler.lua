@@ -25,7 +25,7 @@ local plugin = {
 
 
 
----[[ handles more initialization, but AFTER the worker process has been forked/created.
+-- handles more initialization, but AFTER the worker process has been forked/created.
 -- It runs in the 'init_worker_by_lua_block'
 function plugin:init_worker()
 
@@ -36,7 +36,10 @@ end --]]
 
 
 
---[[ runs in the ssl_certificate_by_lua_block handler
+--[[ runs in the 'ssl_certificate_by_lua_block'
+-- IMPORTANT: during the `certificate` phase neither `route`, `service`, nor `consumer`
+-- will have been identified, hence this handler will only be executed if the plugin is
+-- configured as a global plugin!
 function plugin:certificate(plugin_conf)
 
   -- your custom code here
@@ -59,7 +62,7 @@ end --]]
 
 
 
----[[ runs in the 'access_by_lua_block'
+-- runs in the 'access_by_lua_block'
 function plugin:access(plugin_conf)
 
   -- your custom code here
@@ -69,7 +72,7 @@ function plugin:access(plugin_conf)
 end --]]
 
 
----[[ runs in the 'header_filter_by_lua_block'
+-- runs in the 'header_filter_by_lua_block'
 function plugin:header_filter(plugin_conf)
 
   -- your custom code here, for example;
