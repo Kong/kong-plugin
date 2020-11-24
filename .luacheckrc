@@ -27,6 +27,13 @@ ignore = {
 }
 
 
+include_files = {
+    "**/*.lua",
+    "*.rockspec",
+    ".busted",
+    ".luacheckrc",
+}
+
 exclude_files = {
     --"spec/fixtures/invalid-module.lua",
     --"spec-old-api/fixtures/invalid-module.lua",
