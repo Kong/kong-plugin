@@ -1,0 +1,3 @@
+[submodule "pluginutils"]
+	path = pluginutils
+	url = git@github.com:Kong/pluginutils.git
