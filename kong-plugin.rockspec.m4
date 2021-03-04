@@ -9,6 +9,7 @@ supported_platforms = {"linux", "macosx"}
 source = {
   url = "http://github.com/Kong/kong-plugin.git",
   tag = "PLUGIN_VERSION"
+  -- or version + version offset?
 }
 
 description = {
