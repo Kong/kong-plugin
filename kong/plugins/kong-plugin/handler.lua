@@ -16,7 +16,7 @@
 
 local plugin = {
  PRIORITY = 1000, -- set the plugin priority, which determines plugin execution order
- VERSION = "0.1",
+ VERSION = 1.0.0
 }
 
 
@@ -37,7 +37,7 @@ function plugin:init_worker()
   -- your custom code here
   kong.log.debug("saying hi from the 'init_worker' handler")
 
-end --]]
+end
 
 
 
