@@ -1,5 +1,1 @@
-include pluginutils/Makefile_Base
-
-docs:
-	@echo "Overwrite test"
-	
+include pluginutils/Makefile
