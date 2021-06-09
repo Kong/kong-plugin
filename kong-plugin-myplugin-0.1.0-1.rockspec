@@ -1,34 +1,38 @@
-package = "kong-plugin-myplugin"  -- TODO: rename, must match the info in the filename of this rockspec!
-                                  -- as a convention; stick to the prefix: `kong-plugin-`
-version = "0.1.0-1"               -- TODO: renumber, must match the info in the filename of this rockspec!
--- The version '0.1.0' is the source code version, the trailing '1' is the version of this rockspec.
--- whenever the source version changes, the rockspec should be reset to 1. The rockspec version is only
--- updated (incremented) when this file changes, but the source remains the same.
+local plugin_name = "myplugin"
+local package_name = "kong-plugin-" .. plugin_name
+local package_version = "0.1.0"
+local rockspec_revision = "1"
 
--- TODO: This is the name to set in the Kong configuration `plugins` setting.
--- Here we extract it from the package name.
-local pluginName = package:match("^kong%-plugin%-(.+)$")  -- "myplugin"
+local github_account_name = "Kong"
+local github_repo_name = "kong-plugin"
+local git_checkout = package_version == "dev" and "master" or package_version
 
-supported_platforms = {"linux", "macosx"}
+
+package = package_name
+version = package_version .. "-" .. rockspec_revision
+supported_platforms = { "linux", "macosx" }
 source = {
-  url = "http://github.com/Kong/kong-plugin.git",
-  tag = "0.1.0"
+  url = "git://github.com/"..github_account_name.."/"..github_repo_name..".git",
+  branch = git_checkout,
 }
+
 
 description = {
   summary = "Kong is a scalable and customizable API Management Layer built on top of Nginx.",
-  homepage = "http://getkong.org",
-  license = "Apache 2.0"
+  homepage = "https://"..github_account_name..".github.io/"..github_repo_name,
+  license = "Apache 2.0",
 }
+
 
 dependencies = {
 }
 
+
 build = {
   type = "builtin",
   modules = {
-    -- TODO: add any additional files that the plugin consists of
-    ["kong.plugins."..pluginName..".handler"] = "kong/plugins/"..pluginName.."/handler.lua",
-    ["kong.plugins."..pluginName..".schema"] = "kong/plugins/"..pluginName.."/schema.lua",
+    -- TODO: add any additional code files added to the plugin
+    ["kong.plugins."..plugin_name..".handler"] = "kong/plugins/"..plugin_name.."/handler.lua",
+    ["kong.plugins."..plugin_name..".schema"] = "kong/plugins/"..plugin_name.."/schema.lua",
   }
 }
