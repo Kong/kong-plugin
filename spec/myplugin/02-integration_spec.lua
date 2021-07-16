@@ -10,7 +10,7 @@ for _, strategy in helpers.all_strategies() do
 
     lazy_setup(function()
 
-      local bp = helpers.get_db_utils(strategy == "off" and "postgres" or strategy, nil, { PLUGIN_NAME })
+      local bp = helpers.get_db_utils(strategy, nil, { PLUGIN_NAME })
 
       -- Inject a test route. No need to create a service, there is a default
       -- service which will echo the request.
@@ -24,6 +24,19 @@ for _, strategy in helpers.all_strategies() do
         config = {},
       }
 
+      local yml = helpers.make_yaml_file [[
+        _format_version: "1.1"
+        services:
+        - name: my-service
+          url: http://127.0.0.1:15555
+          routes:
+          - name: example-route
+            paths:
+            - /
+            plugins:
+            - name: "myplugin"
+      ]]
+
       -- start kong
       assert(helpers.start_kong({
         -- set the strategy
@@ -33,7 +46,7 @@ for _, strategy in helpers.all_strategies() do
         -- make sure our plugin gets loaded
         plugins = "bundled," .. PLUGIN_NAME,
         -- write & load declarative config, only if 'strategy=off'
-        declarative_config = strategy == "off" and helpers.make_yaml_file() or nil,
+        declarative_config = strategy == "off" and yml,
       }))
     end)
 
