@@ -9,3 +9,7 @@ servroot
 luacov.stats.out
 # exclude LuaCov report
 luacov.report.out
+# exclude LuaCov statistics file
+luacov.stats.out
+# exclude LuaCov report
+luacov.report.out
