@@ -1,0 +1,79 @@
+name: "Test"
+
+on:
+  push:
+  pull_request:
+  schedule:
+  - cron: '0 0 * * *'  # every day at midnight, to test against nightlies
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        kongVersion:
+        - "2.7.x"
+        - "2.8.x"
+        - "nightly"
+        - "2.7.2.x"
+        - "2.8.1.x"
+        - "nightly-ee"
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: Kong/kong-license@master
+      # this step is only for Kong Inc internal uses, external users should
+      # use the 'license' parameter of the kong-pongo action.
+      with:
+        password: ${{ secrets.PULP_PASSWORD }}
+
+    - uses: Kong/kong-pongo-action@v1
+      with:
+        kong_version: ${{ matrix.kongVersion }}
+        # non-Kong-Inc users should uncomment the following line and provide
+        # the secret by that name if testing against Enterprise versions.
+        # Kong Inc users should use the `Kong/kong-license` action
+        license: ${{ secrets.KONG_LICENSE_DATA }}
+
+
+        # the following 3 entries are only for Kong Inc internal use to test against
+        # the private nighlty-ee image
+        enterprise_nightly_docker_username: ${{ secrets.GHA_DOCKERHUB_PULL_USER }}
+        enterprise_nightly_docker_password: ${{ secrets.GHA_KONG_ORG_DOCKERHUB_PUBLIC_TOKEN }}
+        # github token with permissions to clone the kong-ee repo
+        github_token: ${{ secrets.GHA_KONG_BOT_READ_TOKEN }}
+
+    - run: pongo run -- --coverage
+
+
+
+
+    # Optional upload of coverage data,
+    # just ugly, something to fix...
+    - uses: leafo/gh-actions-lua@v8
+      if: success()
+    - uses: leafo/gh-actions-luarocks@v4
+      if: success()
+    - name: Report test coverage
+      if: success()
+      continue-on-error: true
+      run: |
+        luarocks install luacov-coveralls
+        # hack: luacov config file has a path for inside the pongo container
+        # rewrite those to the local location in GHA
+        if [ -f .luacov ]; then
+          cp .luacov .luacov_backup
+          cat .luacov_backup | sed 's/\/kong-plugin\/luacov./luacov./' > .luacov
+        fi
+        rm *.report.out
+        luacov-coveralls
+        #luacov-coveralls --output coveralls.out
+        # undo the hack
+        if [ -f .luacov_backup ]; then
+          mv .luacov_backup .luacov
+        fi
+      env:
+        COVERALLS_REPO_TOKEN: ${{ github.token }}
