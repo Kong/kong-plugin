@@ -1,10 +1,11 @@
 local typedefs = require "kong.db.schema.typedefs"
 
--- Grab pluginname from module name
-local plugin_name = ({...})[1]:match("^kong%.plugins%.([^%.]+)")
+
+local PLUGIN_NAME = "myplugin"
+
 
 local schema = {
-  name = plugin_name,
+  name = PLUGIN_NAME,
   fields = {
     -- the 'fields' array is the top-level entry with fields defined by Kong
     { consumer = typedefs.no_consumer },  -- this plugin cannot be configured on a consumer (typical for auth plugins)
