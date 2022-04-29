@@ -10,7 +10,8 @@ This template was designed to work with the
 [`kong-pongo`](https://github.com/Kong/kong-pongo) and
 [`kong-vagrant`](https://github.com/Kong/kong-vagrant) development environments.
 
-Please check out those repos `README` files for usage instructions.
+Please check out those repos `README` files for usage instructions. For a complete
+walkthrough check [this blogpost on the Kong website](https://konghq.com/blog/custom-lua-plugin-kong-gateway).
 
 
 Naming and versioning conventions
