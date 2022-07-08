@@ -65,7 +65,7 @@ This results in:
 
 * *rockspec file*: `kong-plugin-my-cool-plugin-1.4.2-1.rockspec`
 
-* File *`handler.lua`* is located at: `./kong/plugin/my-cool-plugin/handler.lua` (and similar for the other plugin files)
+* File *`handler.lua`* is located at: `./kong/plugins/my-cool-plugin/handler.lua` (and similar for the other plugin files)
 
 [badge-travis-url]: https://travis-ci.org/Kong/kong-plugin/branches
 [badge-travis-image]: https://travis-ci.com/Kong/kong-plugin.svg?branch=master
