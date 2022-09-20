@@ -4,7 +4,7 @@ local helpers = require "spec.helpers"
 local PLUGIN_NAME = "myplugin"
 
 
-for _, strategy in helpers.all_strategies() do
+for _, strategy in helpers.all_strategies() do if strategy ~= "cassandra" then
   describe(PLUGIN_NAME .. ": (access) [#" .. strategy .. "]", function()
     local client
 
@@ -86,4 +86,5 @@ for _, strategy in helpers.all_strategies() do
     end)
 
   end)
-end
+
+end end

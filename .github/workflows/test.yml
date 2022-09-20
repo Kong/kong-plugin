@@ -14,11 +14,11 @@ jobs:
       fail-fast: false
       matrix:
         kongVersion:
-        - "2.7.x"
         - "2.8.x"
+        - "3.0.x"
         - "nightly"
-        - "2.7.2.x"
         - "2.8.1.x"
+        - "3.0.0.x"
         - "nightly-ee"
 
     steps:
