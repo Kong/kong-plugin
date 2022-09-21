@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 #
-# The script checks that all lua files have the COPYRIGHT's sha in the header.
-# If not, it adds the copyright.
-# It also removes the Apache LICENSE from the root directory.
+# * check that all lua files have the COPYRIGHT's sha in the header
+#   * if not, add the content of ./COPYRIGHT-HEADER to each file
+#
+# * replace the LICENSE file from the root directory (if it exists)
+#   with the content of ./EE-LICENSE (otherwise create it).
 #
 
 LOCAL_PATH=$(dirname $(realpath $0))
@@ -29,9 +31,9 @@ function add_copyright {
 }
 
 function replace_license {
-  echo "Removing Apache license"
+  echo "Replacing license"
 
-  rm "$LOCAL_PATH/../LICENSE" || return 1
+  cat "$LOCAL_PATH/EE-LICENSE" > "$LOCAL_PATH/../LICENSE" || return 1
 }
 
 main() {
