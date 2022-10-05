@@ -1,0 +1,52 @@
+name: "Apply EE License and Copyright"
+on: [create]
+
+env:
+  SENDER: ${{ github.event.sender.login }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  MESSAGE: "chore(license): EE License and Copyright"
+
+jobs:
+  license_checker:
+    if: contains(
+          fromJson('[
+            "kong",
+            "konghq-cx"
+          ]'),
+          github.event.repository.owner.login
+        )                                                         &&
+        github.event.ref_type               == 'branch'           &&
+        github.event.repository.full_name   != 'kong/kong-plugin' &&
+        github.event.repository.private     == true
+    runs-on: ubuntu-latest
+    name: Apply EE License and Copyright
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: License and Copyright Checker
+        run: |
+          PR_BRANCH="chore/$GITHUB_REF_NAME-license-updated"
+          git config --global user.name "${{ env.SENDER }}"
+          git config --global user.email "${{ env.SENDER }}@users.noreply.github.com"
+          git fetch origin
+          git checkout -b "$PR_BRANCH"
+          .license-scripts/license-checker.sh
+          git commit -am "${{ env.MESSAGE }}"
+          git push origin "$PR_BRANCH"
+          gh pr create --title "${{ env.MESSAGE }}" --body "" --base "$GITHUB_REF_NAME"
+  cleanup:
+    if: ${{ always() && github.event.repository.full_name != 'kong/kong-plugin'}}
+    runs-on: ubuntu-latest
+    needs: license_checker
+    name: Cleanup
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Cleanup
+        run: |
+          git config --global user.name "${{ env.SENDER }}"
+          git config --global user.email "${{ env.SENDER }}@users.noreply.github.com"
+          git switch "$GITHUB_REF_NAME"
+          rm -r .github/workflows/license-checker.yml .license-scripts
+          git commit -am "${{ env.MESSAGE }} Action Cleanup"
+          git push
