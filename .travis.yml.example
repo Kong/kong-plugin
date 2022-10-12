@@ -1,3 +1,5 @@
+# rename to ".travis.yml" to enable this file for Travis CI
+
 dist: focal
 
 jobs:
