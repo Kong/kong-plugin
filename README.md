@@ -1,4 +1,5 @@
-[![Build Status][badge-travis-image]][badge-travis-url]
+[![Unix build](https://img.shields.io/github/workflow/status/Kong/kong-plugin/Test?label=Test&logo=linux)](https://github.com/Kong/kong-plugin/actions/workflows/test.yml)
+[![Luacheck](https://github.com/Kong/kong-plugin/workflows/Lint/badge.svg)](https://github.com/Kong/kong-plugin/actions/workflows/lint.yml)
 
 Kong plugin template
 ====================
@@ -66,6 +67,3 @@ This results in:
 * *rockspec file*: `kong-plugin-my-cool-plugin-1.4.2-1.rockspec`
 
 * File *`handler.lua`* is located at: `./kong/plugins/my-cool-plugin/handler.lua` (and similar for the other plugin files)
-
-[badge-travis-url]: https://travis-ci.org/Kong/kong-plugin/branches
-[badge-travis-image]: https://travis-ci.com/Kong/kong-plugin.svg?branch=master
