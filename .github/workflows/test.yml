@@ -22,10 +22,9 @@ jobs:
         kongVersion:
         - "2.8.x"
         - "3.0.x"
-        - "nightly"
-        - "2.8.1.x"
+        - "dev"
         - "3.0.0.x"
-        - "nightly-ee"
+        - "dev-ee"
 
     steps:
     - uses: actions/checkout@v3
@@ -38,6 +37,7 @@ jobs:
 
     - uses: Kong/kong-pongo-action@v1
       with:
+        pongo_version: master
         kong_version: ${{ matrix.kongVersion }}
         # Non-Kong-Inc users should provide their Enterprise license as a secret
         # if testing against Enterprise versions.
