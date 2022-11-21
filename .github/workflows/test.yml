@@ -39,14 +39,15 @@ jobs:
     - uses: Kong/kong-pongo-action@v1
       with:
         kong_version: ${{ matrix.kongVersion }}
-        # non-Kong-Inc users should uncomment the following line and provide
-        # the secret by that name if testing against Enterprise versions.
+        # Non-Kong-Inc users should provide their Enterprise license as a secret
+        # if testing against Enterprise versions.
         # Kong Inc users should use the `Kong/kong-license` action
         license: ${{ secrets.KONG_LICENSE_DATA }}
 
 
         # the following 3 entries are only for Kong Inc internal use to test against
-        # the private nighlty-ee image
+        # the private Kong Enterprise development images, external users should
+        # delete these.
         enterprise_nightly_docker_username: ${{ secrets.GHA_DOCKERHUB_PULL_USER }}
         enterprise_nightly_docker_password: ${{ secrets.GHA_KONG_ORG_DOCKERHUB_PUBLIC_TOKEN }}
         # github token with permissions to clone the kong-ee repo
