@@ -35,7 +35,7 @@ jobs:
       with:
         password: ${{ secrets.PULP_PASSWORD }}
 
-    - uses: Kong/kong-pongo-action@v1
+    - uses: Kong/kong-pongo-action@fix/dev-ee-build
       with:
         pongo_version: master
         kong_version: ${{ matrix.kongVersion }}
