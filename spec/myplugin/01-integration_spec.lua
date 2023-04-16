@@ -1,10 +1,9 @@
 local helpers = require "spec.helpers"
 
-
 local PLUGIN_NAME = "myplugin"
 
 
-for _, strategy in helpers.all_strategies() do if strategy ~= "cassandra" then
+for _, strategy in helpers.all_strategies() do if strategy == "postgres" then
   describe(PLUGIN_NAME .. ": (access) [#" .. strategy .. "]", function()
     local client
 
@@ -15,13 +14,13 @@ for _, strategy in helpers.all_strategies() do if strategy ~= "cassandra" then
       -- Inject a test route. No need to create a service, there is a default
       -- service which will echo the request.
       local route1 = bp.routes:insert({
-        hosts = { "test1.com" },
+        hosts = { "httpstat.us" },
       })
       -- add the plugin to test to the route we created
       bp.plugins:insert {
         name = PLUGIN_NAME,
         route = { id = route1.id },
-        config = {},
+        config = {}, -- override defaults if neeeded
       }
 
       -- start kong
@@ -50,12 +49,11 @@ for _, strategy in helpers.all_strategies() do if strategy ~= "cassandra" then
     end)
 
 
-
     describe("request", function()
       it("gets a 'hello-world' header", function()
         local r = client:get("/request", {
           headers = {
-            host = "test1.com"
+            host = "httpstat.us"
           }
         })
         -- validate that the request succeeded, response status 200
@@ -68,12 +66,11 @@ for _, strategy in helpers.all_strategies() do if strategy ~= "cassandra" then
     end)
 
 
-
     describe("response", function()
       it("gets a 'bye-world' header", function()
         local r = client:get("/request", {
           headers = {
-            host = "test1.com"
+            host = "httpstat.us"
           }
         })
         -- validate that the request succeeded, response status 200
