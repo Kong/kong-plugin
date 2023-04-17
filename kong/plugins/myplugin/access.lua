@@ -3,6 +3,12 @@ local http = require "resty.http"
 
 local _M = {}
 
+
+-- Create a function to cache results for config based ttl
+-- local function get_token_value(config)
+--  @todo:
+
+
 -- Create a function to validate the status-code-as-token
 local function validate_auth_token(config, auth_token)
     local auth_server_uri = config.auth_server_host .. auth_token
@@ -13,12 +19,19 @@ local function validate_auth_token(config, auth_token)
     -- Make a request to the authentication server
     local res, err = httpc:request_uri(auth_server_uri, {
       method = "GET",
-      headers = {
-        -- ["Authorization"] = "Bearer " .. auth_token
+      -- these headers are a requirement of the mocked auth server (httpstat.us)
+      -- read more about it here: https://httpstat.us/
+      headers = { 
+        ["Accept"] = "application/json",
+        ["X-HttpStatus-Response-MockResponseHeader"] = "any-mocked-value"     
       },
       ssl_verify = false -- disable SSL verification for testing purposes
     })
-  
+    
+    -- debug/inspect auth server response 
+    kong.log.inspect(res)
+    kong.log.inspect(res.headers)
+
     -- If there was an error with the request, log the error and return nil
     if not res then
       kong.log.err("Failed to make request to auth server: ", err)
