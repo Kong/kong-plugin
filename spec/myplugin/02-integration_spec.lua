@@ -60,7 +60,7 @@ for _, strategy in helpers.all_strategies() do if strategy ~= "cassandra" then
         })
         -- validate that the request succeeded, response status 200
         assert.response(r).has.status(200)
-        -- now check the request (as echoed by mockbin) to have the header
+        -- now check the request (as echoed by the mock backend) to have the header
         local header_value = assert.request(r).has.header("hello-world")
         -- validate the value of that header
         assert.equal("this is on a request", header_value)
