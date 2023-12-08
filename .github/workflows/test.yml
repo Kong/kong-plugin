@@ -34,6 +34,7 @@ jobs:
       # use the 'license' parameter of the kong-pongo action.
       with:
         password: ${{ secrets.PULP_PASSWORD }}
+        op-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
     - uses: Kong/kong-pongo-action@v1
       with:
