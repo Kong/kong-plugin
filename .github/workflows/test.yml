@@ -54,7 +54,7 @@ jobs:
         # github token with permissions to clone the kong-ee repo
         github_token: ${{ secrets.GHA_KONG_BOT_READ_TOKEN }}
 
-    - run: pongo run -- --coverage
+    - run: pongo run -- --Xoutput "--color" --coverage
 
 
 
