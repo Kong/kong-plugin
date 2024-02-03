@@ -8,6 +8,7 @@ env:
 
 jobs:
   license_checker:
+    timeout-minutes: ${{ fromJSON(vars.GHA_DEFAULT_TIMEOUT) }}
     if: contains(
           fromJson('[
             "kong",
@@ -35,6 +36,7 @@ jobs:
           git push origin "$PR_BRANCH"
           gh pr create --title "${{ env.MESSAGE }}" --body "" --base "$GITHUB_REF_NAME"
   cleanup:
+    timeout-minutes: ${{ fromJSON(vars.GHA_DEFAULT_TIMEOUT) }}
     if: ${{ always() && github.event.repository.full_name != 'kong/kong-plugin'}}
     runs-on: ubuntu-latest
     needs: license_checker
