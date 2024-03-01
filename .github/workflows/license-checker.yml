@@ -1,6 +1,9 @@
 name: "Apply EE License and Copyright"
 on: [create]
 
+permissions:
+  contents: write
+
 env:
   SENDER: ${{ github.event.sender.login }}
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
