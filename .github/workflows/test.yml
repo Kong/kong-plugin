@@ -47,7 +47,8 @@ jobs:
 
     - uses: Kong/kong-pongo-action@v1
       with:
-        pongo_version: master
+        #pongo_version: master
+        pongo_version: 2.12.0
         kong_version: ${{ matrix.kongVersion }}
 
         # Non-Kong-Inc users should provide their Enterprise license as a secret
