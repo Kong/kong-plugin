@@ -35,6 +35,20 @@ function plugin:init_worker()
 end --]]
 
 
+---[[ Executed every time a plugin config changes.
+-- This can run in the `init_worker` or `timer` phase.
+-- @param configs table|nil A table with all the plugin configs of this plugin type.
+function plugin:configure(configs)
+  kong.log.notice("saying hi from the 'configure' handler, got ", (configs and #configs or 0)," configs")
+
+  if configs == nil then
+    return -- no configs, nothing to do
+  end
+
+  -- your custom code here
+
+end --]]
+
 
 --[[ runs in the 'ssl_certificate_by_lua_block'
 -- IMPORTANT: during the `certificate` phase neither `route`, `service`, nor `consumer`
