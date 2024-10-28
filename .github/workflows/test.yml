@@ -24,20 +24,10 @@ jobs:
         - "3.4.x"
         - "stable"
         - "dev"
-        - "2.8.x.x"
-        - "3.4.x.x"
-        - "stable-ee"
-        - "dev-ee"
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      # login to docker to prevent hitting rate-limits etc
-      with:
-        username: ${{ secrets.GHA_DOCKERHUB_PULL_USER }}
-        password: ${{ secrets.GHA_KONG_ORG_DOCKERHUB_PUBLIC_TOKEN }}
 
     - uses: Kong/kong-license@master
       # this step is only for Kong Inc internal uses, external users should
@@ -50,16 +40,16 @@ jobs:
         pongo_version: master
         kong_version: ${{ matrix.kongVersion }}
 
-        # Non-Kong-Inc users should provide their Enterprise license as a secret
-        # if testing against Enterprise versions.
-        # Kong Inc users should use the `Kong/kong-license` action, and remove this
-        license: ${{ secrets.KONG_LICENSE_DATA }}
+        # # Non-Kong-Inc users should provide their Enterprise license as a secret
+        # # if testing against Enterprise versions.
+        # # Kong Inc users should use the `Kong/kong-license` action, and remove this
+        # license: ${{ secrets.KONG_LICENSE_DATA }}
 
-        # the following entry is only for Kong Inc internal use to test against
-        # the Kong Enterprise development images, external users should
-        # delete this.
-        # github token with permissions to clone the kong-ee repo
-        github_token: ${{ secrets.GHA_KONG_BOT_READ_TOKEN }}
+        # # the following entry is only for Kong Inc internal use to test against
+        # # the Kong Enterprise development images, external users should
+        # # delete this.
+        # # github token with permissions to clone the kong-ee repo
+        # github_token: ${{ secrets.GHA_KONG_BOT_READ_TOKEN }}
 
     - run: pongo run -- --Xoutput "--color" --coverage
 
