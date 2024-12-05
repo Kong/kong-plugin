@@ -1,7 +1,7 @@
 return {
   default = {
     verbose = true,
-    coverage = false,
+    coverage = true,
     output = "gtest",
   },
 }
