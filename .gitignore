@@ -8,7 +8,8 @@ servroot
 .pongo/.bash_history
 # exclude LuaCov statistics file
 luacov.stats.out
-# exclude LuaCov report
+# exclude LuaCov reports
 luacov.report.out
+luacov.report.html
 # exclude Pongo containerid file
 .containerid
