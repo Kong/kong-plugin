@@ -1,4 +1,4 @@
-local plugin_name = "myplugin"
+local plugin_name = "header-validator"
 local package_name = "kong-plugin-" .. plugin_name
 local package_version = "0.1.0"
 local rockspec_revision = "1"
