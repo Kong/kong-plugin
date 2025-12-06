@@ -15,6 +15,7 @@ on:
 
 jobs:
   test:
+    # change it back, for testing
     runs-on: ubuntu-latest
 
     strategy:
